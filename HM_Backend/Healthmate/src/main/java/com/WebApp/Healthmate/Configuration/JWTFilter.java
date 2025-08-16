@@ -2,7 +2,6 @@ package com.WebApp.Healthmate.Configuration;
 
 import com.WebApp.Healthmate.Service.JWTService;
 import com.WebApp.Healthmate.Service.MyUserDetailsService;
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

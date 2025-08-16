@@ -1,7 +1,7 @@
 package com.WebApp.Healthmate.Repository;
 
-import com.WebApp.Healthmate.DTOs.DoctorResponseDTO;
 import com.WebApp.Healthmate.Model.AppUser;
+import com.WebApp.Healthmate.Model.Doctor;
 import com.WebApp.Healthmate.Model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,4 +16,5 @@ public interface UserRepo extends JpaRepository<AppUser,Long>{
 
 
     List<AppUser> findByRoleAndDoctor_Specialization(Role role, String specialization);
+
 }

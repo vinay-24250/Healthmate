@@ -5,19 +5,14 @@ import com.WebApp.Healthmate.DTOs.DoctorResponseDTO;
 import com.WebApp.Healthmate.DTOs.LoginResponseDTO;
 import com.WebApp.Healthmate.DTOs.SignupRequestDTO;
 import com.WebApp.Healthmate.Model.AppUser;
-import com.WebApp.Healthmate.Model.Doctor;
-import com.WebApp.Healthmate.Model.Role;
 import com.WebApp.Healthmate.Service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @RestController

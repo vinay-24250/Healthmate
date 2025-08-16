@@ -57,7 +57,7 @@ const SignUp = ({ switchToSignIn }) => {
               onChange={(e) => {
                 setRole(e.target.value.toUpperCase());
               }}
-              className="h-8 p-2 border-2 border-yellow outline-none w-80 bg-emerald-200 placeholder:text-gray-800 placeholder:font-thin placeholder:text-sm"
+              className="h-8 p-2 border-2 border-yellow outline-none w-80 bg-blue-300 placeholder:text-gray-800 placeholder:font-thin placeholder:text-sm"
           
             >
               

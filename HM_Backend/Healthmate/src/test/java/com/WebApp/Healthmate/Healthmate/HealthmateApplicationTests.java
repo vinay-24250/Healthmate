@@ -1,4 +1,4 @@
-package com.WebApp.Healthmate;
+package com.WebApp.Healthmate.Healthmate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

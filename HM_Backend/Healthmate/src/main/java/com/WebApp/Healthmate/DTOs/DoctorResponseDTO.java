@@ -6,6 +6,8 @@ public class DoctorResponseDTO {
     private String fullName;
     private String email;
     private String specialization;
+    private String qualification;
+    private String hospitalName;
 
     public DoctorResponseDTO(Long doc_id, String fullName, String email, String specialization, String qualification, String hospitalName) {
         this.doc_id = doc_id;
@@ -16,8 +18,7 @@ public class DoctorResponseDTO {
         this.fullName = fullName;
     }
 
-    private String qualification;
-    private String hospitalName;
+
 
 
     public Long getDoc_id() {

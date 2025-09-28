@@ -5,33 +5,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AuthProvider = ({ children }) => {
-  const [authToken, setAuthToken] = useState(() => localStorage.getItem("authToken"));
   const [currentUser, setCurrentUser] = useState();
   const [authPanel, setAuthPanel] = useState(false);
   const [authMode, setAuthMode] = useState("");
 
+   axios.defaults.withCredentials = true;
+
+
   const navigate = useNavigate();
 
-  const fetchCurrentUser = async (token) => {
-    const userResponse = await axios.get("http://localhost:8080/me", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  const fetchCurrentUser = async () => {
+    const userResponse = await axios.get("http://localhost:8080/me" , {withCredentials : true});
 
     const currentUserData = userResponse.data;
     setCurrentUser({ email: currentUserData.email , role: currentUserData.role , fullName : currentUserData.fullName });
     console.log(currentUser)
   };
 
-  useEffect(() => {
-
-    const token = localStorage.getItem("authToken")
-    if (token) {
-      setAuthToken(token)
-      fetchCurrentUser(token);
-    } else {
-      setCurrentUser(null);
-    }
+    useEffect(() => {
+    fetchCurrentUser();
   }, []);
+
 
   const handleSignUp = async ({ email, password ,fullName ,role , specialization , qualification , hospitalName}, setMessage) => {
 
@@ -67,15 +61,13 @@ const AuthProvider = ({ children }) => {
       const response = await axios.post("http://localhost:8080/login", {
         email,
         password,
-      });
+      } ,{ withCredentials: true });
 
       let token = response.data.token;
       setCurrentUser(response.data)
 
       if (token && token.startsWith("Bearer ")) {
         token = token.substring(7);
-        localStorage.setItem("authToken", token);
-        setAuthToken(token);
         return response;
       }
     } catch (error) {
@@ -92,8 +84,6 @@ const AuthProvider = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     setCurrentUser(null);
-    setAuthToken(null);
-    console.log("Logout cliked");
     navigate("/");
   };
 
@@ -103,7 +93,6 @@ const AuthProvider = ({ children }) => {
         value={{
           handleSignUp,
           handleLogin,
-          authToken,
           currentUser,
           handleLogout,
           setAuthMode,

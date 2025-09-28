@@ -4,6 +4,7 @@ import com.WebApp.Healthmate.Service.JWTService;
 import com.WebApp.Healthmate.Service.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,26 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = null;
         String email = null;
 
-        if(authHeader != null && authHeader.startsWith("Bearer ")){
-            token = authHeader.substring(7);
-            email = jwtService.extractEmail(token);
+        if(request.getCookies() != null){
+           for(Cookie cookie : request.getCookies()){
+               if("token".equals(cookie.getName())){
+                   token = cookie.getValue();
+               }
+           }
         }
+
+        if(token == null){
+            filterChain.doFilter(request ,response);
+            return;
+        }
+
+        try {
+            email = jwtService.extractEmail(token);
+        } catch (Exception e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
 
         if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(email);

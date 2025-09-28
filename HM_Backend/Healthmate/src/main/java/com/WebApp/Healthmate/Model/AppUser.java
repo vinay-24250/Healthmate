@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name ="users")
 @NoArgsConstructor
@@ -39,6 +41,26 @@ public class AppUser {
 
     @Column(nullable = false)
     private String password;
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public LocalDateTime getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
+    }
+
+    public String resetToken;
+    public LocalDateTime resetTokenExpiry;
+
 
     @Enumerated(EnumType.STRING)
     private Role role;  // USER, DOCTOR, ADMIN

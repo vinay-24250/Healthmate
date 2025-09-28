@@ -12,17 +12,17 @@ public class Doctor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long doc_id;
+    private Long docId;
 
     private String specialization;
 
 
-    public Long getDoc_id() {
-        return doc_id;
+    public Long getDocId() {
+        return docId;
     }
 
-    public void setDoc_id(Long doc_id) {
-        this.doc_id = doc_id;
+    public void setDocId(Long docId) {
+        this.docId = docId;
     }
 
     public String getSpecialization() {
@@ -64,4 +64,5 @@ public class Doctor {
     @JoinColumn(name = "user_id" , referencedColumnName = "Id")
     @JsonBackReference
     private AppUser user;
+
 }

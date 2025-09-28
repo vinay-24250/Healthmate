@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public class UserPrinciple implements UserDetails {
 
-private Optional<AppUser> user;
+private AppUser user;
 
-    public UserPrinciple(Optional<AppUser> user) {
+    public UserPrinciple(AppUser user) {
         this.user = user;
 
     }
@@ -24,12 +24,12 @@ private Optional<AppUser> user;
 
     @Override
     public String getPassword() {
-        return user.get().getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.get().getEmail();
+        return user.getEmail();
     }
 }
 

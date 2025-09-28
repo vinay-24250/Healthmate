@@ -6,7 +6,7 @@ import com.WebApp.Healthmate.DTOs.SignupRequestDTO;
 import com.WebApp.Healthmate.Model.AppUser;
 import com.WebApp.Healthmate.Model.Doctor;
 import com.WebApp.Healthmate.Model.Role;
-import com.WebApp.Healthmate.Repository.UserRepo;
+import com.WebApp.Healthmate.Repository.AuthRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,15 +15,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class AuthService {
 
     @Autowired
-    private UserRepo userRepo;
+    private AuthRepo authRepo;
 
     @Autowired
  private PasswordEncoder encoder;
@@ -35,7 +36,7 @@ public class UserService {
     private JWTService jwtService;
 
     public AppUser register(SignupRequestDTO signupRequestDTO){
-        if(userRepo.existsByEmail(signupRequestDTO.getEmail())) {
+        if(authRepo.existsByEmail(signupRequestDTO.getEmail())) {
             System.out.println("Already exist");
             throw new RuntimeException("Email already exist");
         }
@@ -56,7 +57,7 @@ public class UserService {
             user.setDoctor(doc);
         }
 
-        return userRepo.save(user);
+        return authRepo.save(user);
     }
 
     public LoginResponseDTO login(AppUser user) {
@@ -65,25 +66,26 @@ public class UserService {
         if(!authentication.isAuthenticated()){
             throw new BadCredentialsException("Invalid credentials");
         }
-        Optional<AppUser> existingUser = userRepo.findByEmail(user.getEmail());
+        AppUser existingUser = authRepo.findByEmail(user.getEmail());
         String token = jwtService.generateToken(user.getEmail());
-        Role role = existingUser.get().getRole();
-        return new LoginResponseDTO(existingUser.get().getRole() , "Bearer " + token);
+        Role role = existingUser.getRole();
+        return new LoginResponseDTO(existingUser.getRole() , "Bearer " + token);
     }
 
     public List<AppUser> getAllUsers() {
-        return userRepo.findAll();
+
+        return authRepo.findAll();
     }
 
     public AppUser getUserByEmail(String email) {
-        return userRepo.findByEmail(email).orElseThrow(() ->new RuntimeException("User not found"));
+        return authRepo.findByEmail(email);
     }
 
 
     public List<DoctorResponseDTO> getDoctorsBySpecialization(String specialization) {
-        List<AppUser> doctors = userRepo.findByRoleAndDoctor_Specialization(Role.DOCTOR , specialization);
+        List<AppUser> doctors = authRepo.findByRoleAndDoctor_Specialization(Role.DOCTOR , specialization);
         return doctors.stream().map(user ->new DoctorResponseDTO(
-                user.getDoctor().getDoc_id(),
+                user.getDoctor().getDocId(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getDoctor().getSpecialization(),
@@ -91,4 +93,31 @@ public class UserService {
                 user.getDoctor().getHospitalName()
         )).collect(Collectors.toList());
     }
-}
+
+    public void generateResetToken(String email) {
+        try {
+            AppUser user = authRepo.findByEmail(email);
+            String resetToken = UUID.randomUUID().toString();
+
+            user.setResetToken(resetToken);
+            user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
+            authRepo.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public List<DoctorResponseDTO> getAllDoctors() {
+        List<AppUser> doctors = authRepo.findByRole(Role.DOCTOR);
+        return doctors.stream().map(user ->new DoctorResponseDTO(
+                user.getDoctor().getDocId(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getDoctor().getSpecialization(),
+                user.getDoctor().getQualification(),
+                user.getDoctor().getHospitalName()
+        )).collect(Collectors.toList());
+    }
+    }
+

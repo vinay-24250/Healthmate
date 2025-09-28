@@ -9,17 +9,8 @@ import java.time.LocalDateTime;
 public class AppointmentResponseDTO {
 
     private Long appointmentId;
-    private Long doc_id;
     private String fullName;
     private String doctorName;
-
-    public Long getDoc_id() {
-        return doc_id;
-    }
-
-    public void setDoc_id(Long doc_id) {
-        this.doc_id = doc_id;
-    }
 
     public String getDoctorName() {
         return doctorName;
@@ -29,11 +20,10 @@ public class AppointmentResponseDTO {
         this.doctorName = doctorName;
     }
 
-    public AppointmentResponseDTO(Long appointmentId, Long doctor_id , String fullName, String doctorName, AppointmentStatus status, LocalDateTime appointmentTime, String reason) {
-        this.doc_id = doc_id;
+    public AppointmentResponseDTO(Long appointmentId , String fullName, String doctorName, AppointmentStatus status, LocalDateTime appointmentTime, String reason) {
         this.appointmentId = appointmentId;
         this.fullName = fullName;
-        this.doctorName = doctorName;
+        this.doctorName = doctorName ;
         this.status = status;
         this.appointmentTime = appointmentTime;
         this.reason = reason;
@@ -50,7 +40,6 @@ public class AppointmentResponseDTO {
         this.appointmentTime = savedAppointement.getAppointmentTime();
         this.reason = savedAppointement.getReason();
         this.status = savedAppointement.getStatus();
-        this.doc_id = savedAppointement.getDoctor().getDoc_id();
     }
 
     public Long getAppointmentId() {

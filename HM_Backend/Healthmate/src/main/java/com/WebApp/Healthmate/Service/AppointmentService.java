@@ -8,12 +8,13 @@ import com.WebApp.Healthmate.Model.AppointmentStatus;
 import com.WebApp.Healthmate.Model.Doctor;
 import com.WebApp.Healthmate.Repository.AppointmentRepo;
 import com.WebApp.Healthmate.Repository.DoctorRepo;
-import com.WebApp.Healthmate.Repository.UserRepo;
+import com.WebApp.Healthmate.Repository.AuthRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -22,7 +23,7 @@ public class AppointmentService {
     private AppointmentRepo appointmentRepo;
 
     @Autowired
-    private UserRepo userRepo;
+    private AuthRepo authRepo;
 
     @Autowired
     private DoctorRepo doctorRepo;
@@ -34,11 +35,11 @@ public class AppointmentService {
     public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO request) {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        AppUser user = userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        AppUser user = authRepo.findByEmail(email);
         System.out.println("user");
 
 
-        Doctor doctor = doctorRepo.findById(request.getDoc_id()).orElseThrow(() -> new RuntimeException("Doctor is null"));
+        Doctor doctor = doctorRepo.findById(request.getDocId()).orElseThrow(() -> new RuntimeException("Doctor is null"));
 
         Appointment appointment = new Appointment();
 
@@ -50,6 +51,46 @@ public class AppointmentService {
 
         Appointment savedAppointement = appointmentRepo.save(appointment);
         return new AppointmentResponseDTO(savedAppointement);
+    }
+
+    public List<AppointmentResponseDTO> getDoctorAppointments(String email) {
+
+        AppUser user = authRepo.findByEmail(email).getDoctor().getUser();
+       List<Appointment> appointmentList = appointmentRepo.findByDoctor_DocId(user.getDoctor().getDocId());
+
+        return appointmentList.stream()
+                .map(AppointmentResponseDTO::new)
+                .collect(Collectors.toList());
+
+    }
+
+    public AppointmentResponseDTO updateStatus(Long appointmentId, AppointmentStatus status) {
+
+      Appointment appointment = appointmentRepo.findById(appointmentId).orElseThrow(() -> new RuntimeException("Appointment Not found"));
+
+      appointment.setStatus(status);
+
+      return new AppointmentResponseDTO(appointmentRepo.save(appointment));
+    }
+
+    public List<AppointmentResponseDTO> getAppointmentsByStatus(AppointmentStatus status) {
+
+        List<Appointment> appointmentList = appointmentRepo.findByStatus(status);
+
+        return appointmentList.stream()
+                .map(AppointmentResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<AppointmentResponseDTO> getAppointments(String email) {
+
+        AppUser user = authRepo.findByEmail(email);
+        List<Appointment> appointmentList = appointmentRepo.findByUser_Id(user.getId());
+
+        return appointmentList.stream()
+                .map(AppointmentResponseDTO::new)
+                .collect(Collectors.toList());
+
     }
 }
 

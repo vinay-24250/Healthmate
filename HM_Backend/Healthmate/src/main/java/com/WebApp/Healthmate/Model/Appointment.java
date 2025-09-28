@@ -21,10 +21,8 @@ public class Appointment {
     private AppUser user;
 
     @ManyToOne
-    @JoinColumn(name ="doctor_id" ,referencedColumnName = "doc_id")
+    @JoinColumn(name ="doctor_id" ,referencedColumnName = "docId")
     private Doctor doctor;
-
-    private String doctorName;
 
     private LocalDateTime appointmentTime;
     private String reason;

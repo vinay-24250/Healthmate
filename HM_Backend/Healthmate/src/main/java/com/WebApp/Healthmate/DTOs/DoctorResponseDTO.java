@@ -2,15 +2,15 @@ package com.WebApp.Healthmate.DTOs;
 
 public class DoctorResponseDTO {
 
-    private  Long doc_id;
+    private  Long docId;
     private String fullName;
     private String email;
     private String specialization;
     private String qualification;
     private String hospitalName;
 
-    public DoctorResponseDTO(Long doc_id, String fullName, String email, String specialization, String qualification, String hospitalName) {
-        this.doc_id = doc_id;
+    public DoctorResponseDTO(Long docId, String fullName, String email, String specialization, String qualification, String hospitalName) {
+        this.docId = docId;
         this.hospitalName = hospitalName;
         this.qualification = qualification;
         this.specialization = specialization;
@@ -21,12 +21,12 @@ public class DoctorResponseDTO {
 
 
 
-    public Long getDoc_id() {
-        return doc_id;
+    public Long getDocId() {
+        return docId;
     }
 
-    public void setDoc_id(Long doc_id) {
-        this.doc_id = doc_id;
+    public void setDocId(Long docId) {
+        this.docId = docId;
     }
 
     public String getEmail() {

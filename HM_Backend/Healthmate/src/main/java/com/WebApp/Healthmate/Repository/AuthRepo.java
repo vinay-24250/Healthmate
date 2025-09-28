@@ -1,20 +1,19 @@
 package com.WebApp.Healthmate.Repository;
 
 import com.WebApp.Healthmate.Model.AppUser;
-import com.WebApp.Healthmate.Model.Doctor;
 import com.WebApp.Healthmate.Model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface UserRepo extends JpaRepository<AppUser,Long>{
+public interface AuthRepo extends JpaRepository<AppUser,Long>{
 
-   Optional<AppUser> findByEmail(String email);
+   AppUser findByEmail(String email);
 
     boolean existsByEmail(String email);
 
 
     List<AppUser> findByRoleAndDoctor_Specialization(Role role, String specialization);
 
+    List<AppUser> findByRole(Role role);
 }

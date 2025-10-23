@@ -1,6 +1,4 @@
 package com.WebApp.Healthmate.Controller;
-
-
 import com.WebApp.Healthmate.DTOs.DoctorResponseDTO;
 import com.WebApp.Healthmate.DTOs.LoginResponseDTO;
 import com.WebApp.Healthmate.DTOs.SignupRequestDTO;
@@ -80,6 +78,4 @@ public class AuthController {
         authService.generateResetToken(email);
         return  ResponseEntity.ok("Password reset link sent to email");
     }
-
-
 }

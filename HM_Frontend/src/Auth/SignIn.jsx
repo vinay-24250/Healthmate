@@ -26,6 +26,7 @@ const SignIn = ({ switchToSignUp }) => {
      }
 
     const role = loginData.data.role;
+    console.log(role)
 
     if (role === "DOCTOR") {
       navigate("/doctordash");

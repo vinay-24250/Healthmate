@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState(null);
   const [authPanel, setAuthPanel] = useState(false);
   const [authMode, setAuthMode] = useState("");
 
@@ -18,8 +18,9 @@ const AuthProvider = ({ children }) => {
     const userResponse = await axios.get("http://localhost:8080/me" , {withCredentials : true});
 
     const currentUserData = userResponse.data;
+    console.log(currentUserData)
     setCurrentUser({ email: currentUserData.email , role: currentUserData.role , fullName : currentUserData.fullName });
-    console.log(currentUser)
+
   };
 
     useEffect(() => {
